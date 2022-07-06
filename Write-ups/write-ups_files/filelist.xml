@@ -2,6 +2,10 @@
  <o:MainFile HRef="../write-ups.html"/>
  <o:File HRef="themedata.thmx"/>
  <o:File HRef="colorschememapping.xml"/>
+ <o:File HRef="image001.png"/>
+ <o:File HRef="image002.png"/>
+ <o:File HRef="image003.png"/>
+ <o:File HRef="image004.png"/>
  <o:File HRef="editdata.mso"/>
  <o:File HRef="filelist.xml"/>
 </xml>
