@@ -1,0 +1,187 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Problem 1: Fully Stressed Beams</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-07-12"><meta name="DC.source" content="Problem1_FSB.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:segoe print; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:justify; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Times new roman; font-size:3em; color:#d55000; line-height:100%; font-weight:normal; text-align:center;}
+h2 { padding:0px; margin:0px 0px 8px; font-family:Times new roman; font-size:1.4em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Times new roman; font-size:1.3em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Problem 1: Fully Stressed Beams</h1><!--introduction--><p>Pretty bored on 8 April 2021, I decided to design a problem related to solid mechanics and share it among my friends. It looked more like a satirical trick question because of the prolog and epilog added to the statement (see image), so it received little attention. Around a year and quarter later, it's time to solve the question once and for all.</p><p>By: Minerva-007</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Problem statement</a></li><li><a href="#2">Defining constants</a></li><li><a href="#5">Basic statics</a></li><li><a href="#8">Design by max bending moment</a></li></ul></div><h2 id="1">Problem statement</h2><p>A fully stressed non-prismatic simply supported rectangular beam of length 20m and width 3m is subjected to a uniform load of 50kN/m. The mass of the beam is included in the load. The material used has the properties E=210 GPa; YS=135 MPa. Applying a factor of safety of 1.69,</p><div><ul><li>determine the central deflection in the beam;</li><li>draw the elastic curve;</li><li>draw the variation of cross section w.r.t. span.</li></ul></div><h2 id="2">Defining constants</h2><p>A few constants that will be used throughout the writeup are defined here.</p><div><ul><li>Material constants: elastic constant, yield strength. This is actually data for S135 steel.</li></ul></div><pre class="codeinput">E=210e9; YS=135e6;
+</pre><div><ul><li>Geometric constants: length, width.</li></ul></div><pre class="codeinput">Len=20; wid=3;
+</pre><div><ul><li>Design data: FoS and load distribution. (1.69 is low FoS for a safe design, more on that later).</li></ul></div><pre class="codeinput">FoS=1.69; load_dis=50e3;
+</pre><h2 id="5">Basic statics</h2><p>A few calculations to get started.</p><pre class="codeinput">F_load=load_dis * Len
+R_left=F_load/2
+R_right=R_left
+</pre><pre class="codeoutput">
+F_load =
+
+     1000000
+
+
+R_left =
+
+      500000
+
+
+R_right =
+
+      500000
+
+</pre><p>The shear and bending moment diagram. Remembering that shear and bending moment distributions are consecutive integrals of load distribution, and realizing that in a simply supported beam the end conditions are reaction force for shear and zero for bending moment, this is simple.</p><p><img src="Problem1_FSB_eq17300114475431384897.png" alt="$$V(x) = R_{left} - Load \times x$$"></p><p><img src="Problem1_FSB_eq00667938592858361903.png" alt="$$M(x) = R_{left} \times x - Load \times x^2$$"></p><pre class="codeinput">V = @(x) -load_dis* x + R_left;
+M = @(x) -load_dis* x^2 *0.5 + R_left*x;
+figure
+subplot(2,1,1)
+fplot(V,[0 Len])
+xlabel(<span class="string">"distance along beam (m)"</span>)
+ylabel(<span class="string">"shear force, N"</span>)
+title(<span class="string">"SFD"</span>)
+subplot(2,1,2)
+fplot(M,[0 Len])
+xlabel(<span class="string">"distance along beam (m)"</span>)
+ylabel(<span class="string">"bending moment, N"</span>)
+title(<span class="string">"BMD"</span>)
+</pre>
+<center><img src="Problem1_FSB_01.png"></center>
+<p>To figure out maximum bending moment, we find M at Len/2.</p><pre class="codeinput">M_max=M(Len/2)
+</pre><pre class="codeoutput">
+M_max =
+
+     2500000
+
+</pre><h2 id="8">Design by max bending moment</h2><p>Perhaps the simplest method in beam designing is to simply determine M_max, and determine the moment of inertia that supports this bending moment. Then, proceed to design a prismatic beam with a constant cross-sectional area.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Made with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Problem 1: Fully Stressed Beams
+% Pretty bored on 8 April 2021, I decided to design a problem related to 
+% solid mechanics and share it among my friends. 
+% It looked more like a satirical trick question because of the prolog and 
+% epilog added to the statement (see image), so it received little 
+% attention. Around a year and quarter later, it's time to solve the 
+% question once and for all.
+% 
+% By: Minerva-007
+
+%% Problem statement
+% A fully stressed non-prismatic simply supported rectangular beam of 
+% length 20m and width 3m is subjected to a uniform load of 50kN/m. 
+% The mass of the beam is included in the load. 
+% The material used has the properties E=210 GPa; YS=135 MPa. 
+% Applying a factor of safety of 1.69, 
+% 
+% * determine the central deflection in the beam;
+% * draw the elastic curve;
+% * draw the variation of cross section w.r.t. span.
+
+%% Defining constants
+% A few constants that will be used throughout the writeup are defined
+% here.
+% 
+% * Material constants: elastic constant, yield strength. This is actually
+% data for S135 steel.
+E=210e9; YS=135e6;
+%% 
+% * Geometric constants: length, width.
+Len=20; wid=3;
+%% 
+% * Design data: FoS and load distribution. (1.69 is low FoS for a safe 
+% design, more on that later).
+FoS=1.69; load_dis=50e3;
+%% Basic statics
+% A few calculations to get started.
+F_load=load_dis * Len
+R_left=F_load/2
+R_right=R_left
+%%
+% The shear and bending moment diagram.
+% Remembering that shear and bending moment distributions are consecutive
+% integrals of load distribution, and realizing that in a simply supported
+% beam the end conditions are reaction force for shear and zero for bending
+% moment, this is simple.
+% 
+% $$V(x) = R_{left} - Load \times x$$
+%
+% $$M(x) = R_{left} \times x - Load \times x^2$$
+V = @(x) -load_dis* x + R_left;
+M = @(x) -load_dis* x^2 *0.5 + R_left*x;
+figure
+subplot(2,1,1)
+fplot(V,[0 Len])
+xlabel("distance along beam (m)")
+ylabel("shear force, N")
+title("SFD")
+subplot(2,1,2)
+fplot(M,[0 Len])
+xlabel("distance along beam (m)")
+ylabel("bending moment, N")
+title("BMD")
+%%
+% To figure out maximum bending moment, we find M at Len/2.
+M_max=M(Len/2)
+%% Design by max bending moment
+% Perhaps the simplest method in beam designing is to simply determine
+% M_max, and determine the moment of inertia that supports this bending
+% moment. Then, proceed to design a prismatic beam with a constant
+% cross-sectional area.
+% 
+##### SOURCE END #####
+--></body></html>
