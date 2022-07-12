@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Problem 1: Fully Stressed Beams</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-07-12"><meta name="DC.source" content="Problem1_FSB.m"><style type="text/css">
+      --><title>Problem 1: Fully Stressed Beams</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-07-13"><meta name="DC.source" content="Problem1_FSB.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -67,7 +67,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Problem 1: Fully Stressed Beams</h1><!--introduction--><p>Pretty bored on 8 April 2021, I decided to design a problem related to solid mechanics and share it among my friends. It looked more like a satirical trick question because of the prolog and epilog added to the statement (see image), so it received little attention. Around a year and quarter later, it's time to solve the question once and for all.</p><p>By: Minerva-007</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Problem statement</a></li><li><a href="#2">Defining constants</a></li><li><a href="#5">Basic statics</a></li><li><a href="#8">Design by max bending moment</a></li></ul></div><h2 id="1">Problem statement</h2><p>A fully stressed non-prismatic simply supported rectangular beam of length 20m and width 3m is subjected to a uniform load of 50kN/m. The mass of the beam is included in the load. The material used has the properties E=210 GPa; YS=135 MPa. Applying a factor of safety of 1.69,</p><div><ul><li>determine the central deflection in the beam;</li><li>draw the elastic curve;</li><li>draw the variation of cross section w.r.t. span.</li></ul></div><h2 id="2">Defining constants</h2><p>A few constants that will be used throughout the writeup are defined here.</p><div><ul><li>Material constants: elastic constant, yield strength. This is actually data for S135 steel.</li></ul></div><pre class="codeinput">E=210e9; YS=135e6;
+  </style></head><body><div class="content"><h1>Problem 1: Fully Stressed Beams</h1><!--introduction--><p>Pretty bored on 8 April 2021, I decided to design a problem related to solid mechanics and share it among my friends. It looked more like a satirical trick question because of the prolog and epilog added to the statement (see image), so it received little attention. Around a year and quarter later, it's time to solve the question once and for all.</p><p>By: Minerva-007</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Problem statement</a></li><li><a href="#2">Defining constants</a></li><li><a href="#5">Basic statics</a></li><li><a href="#8">Design by max bending moment</a></li><li><a href="#16">Design by fully stressed beam</a></li></ul></div><h2 id="1">Problem statement</h2><p>A fully stressed non-prismatic simply supported rectangular beam of length 20m and width 3m is subjected to a uniform load of 50kN/m. The mass of the beam is included in the load. The material used has the properties E=210 GPa; YS=135 MPa. Applying a factor of safety of 1.69,</p><div><ul><li>determine the central deflection in the beam;</li><li>draw the elastic curve;</li><li>draw the variation of cross section w.r.t. span.</li></ul></div><h2 id="2">Defining constants</h2><p>A few constants that will be used throughout the writeup are defined here.</p><div><ul><li>Material constants: elastic constant, yield strength. This is actually data for S135 steel.</li></ul></div><pre class="codeinput">E=210e9; YS=135e6;
 </pre><div><ul><li>Geometric constants: length, width.</li></ul></div><pre class="codeinput">Len=20; wid=3;
 </pre><div><ul><li>Design data: FoS and load distribution. (1.69 is low FoS for a safe design, more on that later).</li></ul></div><pre class="codeinput">FoS=1.69; load_dis=50e3;
 </pre><h2 id="5">Basic statics</h2><p>A few calculations to get started.</p><pre class="codeinput">F_load=load_dis * Len
@@ -101,15 +101,48 @@ fplot(M,[0 Len])
 xlabel(<span class="string">"distance along beam (m)"</span>)
 ylabel(<span class="string">"bending moment, N"</span>)
 title(<span class="string">"BMD"</span>)
-</pre>
-<center><img src="Problem1_FSB_01.png"></center>
-<p>To figure out maximum bending moment, we find M at Len/2.</p><pre class="codeinput">M_max=M(Len/2)
+</pre><center><img vspace="5" hspace="5" src="Problem1_FSB_01.png" alt=""></center> <p>To figure out maximum bending moment, we find M at Len/2.</p><pre class="codeinput">M_max=M(Len/2)
 </pre><pre class="codeoutput">
 M_max =
 
      2500000
 
-</pre><h2 id="8">Design by max bending moment</h2><p>Perhaps the simplest method in beam designing is to simply determine M_max, and determine the moment of inertia that supports this bending moment. Then, proceed to design a prismatic beam with a constant cross-sectional area.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Made with MATLAB&reg; R2022a</a><br></p></div><!--
+</pre><h2 id="8">Design by max bending moment</h2><p>Perhaps the simplest method in beam designing is to simply determine M_max, and determine the moment of inertia that supports this bending moment. Then, proceed to design a prismatic beam with a constant cross-sectional area.</p><p>Defining I by using relation <img src="Problem1_FSB_eq14338188888940629095.png" alt="$I = {{b \times d^3} \over 12}$"></p><pre class="codeinput">I = @(d) wid * d^3 /12;
+</pre><p>Loading symbolic variables</p><pre class="codeinput">syms <span class="string">d</span>;
+</pre><p>Solve the equation <img src="Problem1_FSB_eq01774059899790553720.png" alt="${YS \over FoS} = {{M_{max} \times c} \over I}$"> Replacing c by d/2 and I by function convert to single-precision float, and dump results</p><pre class="codeinput">beam1.d=single(solve(YS/FoS==M_max*(d/2)/I(d), d));
+beam1.d=beam1.d(2);
+</pre><p>Picking th +ve value, the answer is 25.02cm, or roughly 5 inches.</p><p>Let us determine the central deflection of this prismatic beam.</p><pre class="codeinput">beam1.def = 5 * load_dis * Len^4 / (384 * E * I(beam1.d));
+</pre><p>Determining the mass of the beam, assuming that it is steel such that <img src="Problem1_FSB_eq18023991343397556686.png" alt="$\rho = 8000 {kg \over m^3}$"></p><pre class="codeinput">beam1.vol = Len * wid * beam1.d;
+beam1.mass = beam1.vol * 8000;
+beam1
+</pre><pre class="codeoutput">
+beam1 = 
+
+  struct with fields:
+
+       d: 0.2502
+     def: 0.1267
+     vol: 15.0111
+    mass: 1.2009e+05
+
+</pre><p>Since a shear force of 50kN is being applied at the ends, a check is performed to determine the effect of shear stress on the beam. Knowing that maximum shear in a rectangular cross-section occurs at the central line with magnitude equal to <img src="Problem1_FSB_eq00323859641770353769.png" alt="$1.5 {V \over A}$">,</p><pre class="codeinput">shear_stress= 1.5 * V(0) / (wid * beam1.d);
+</pre><p>converting it into equivalent normal stress by employing Von Mises factor,</p><pre class="codeinput">eq_normal = sqrt(3) * shear_stress
+eq_normal/(YS/FoS)
+</pre><pre class="codeoutput">
+eq_normal =
+
+  single
+
+  1.7308e+06
+
+
+ans =
+
+  single
+
+    0.0217
+
+</pre><p>So, it is visible that even in the worst-but-theoretically-impossible situation of maximum shear overlapping with maximum bending moment, it accounts for no more than 2.2% of stress. Hence, it can be ignored.</p><h2 id="16">Design by fully stressed beam</h2><p>Before diving into design, following points are to be noted:</p><p><b>WIP</b></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Problem 1: Fully Stressed Beams
 % Pretty bored on 8 April 2021, I decided to design a problem related to 
@@ -183,5 +216,46 @@ M_max=M(Len/2)
 % moment. Then, proceed to design a prismatic beam with a constant
 % cross-sectional area.
 % 
+% Defining I by using relation $I = {{b \times d^3} \over 12}$
+I = @(d) wid * d^3 /12;
+%%
+% Loading symbolic variables
+syms d;
+%%
+% Solve the equation ${YS \over FoS} = {{M_{max} \times c} \over I}$
+% Replacing c by d/2 and I by function
+% convert to single-precision float, and dump results
+beam1.d=single(solve(YS/FoS==M_max*(d/2)/I(d), d));
+beam1.d=beam1.d(2);
+%%
+% Picking th +ve value, the answer is 25.02cm, or roughly 5 inches.
+%
+% Let us determine the central deflection of this prismatic beam.
+beam1.def = 5 * load_dis * Len^4 / (384 * E * I(beam1.d));
+%%
+% Determining the mass of the beam, assuming that it is steel such that
+% $\rho = 8000 {kg \over m^3}$
+beam1.vol = Len * wid * beam1.d;
+beam1.mass = beam1.vol * 8000;
+beam1
+%%
+% Since a shear force of 50kN is being applied at the ends, a check is
+% performed to determine the effect of shear stress on the beam. Knowing
+% that maximum shear in a rectangular cross-section occurs at the central 
+% line with magnitude equal to $1.5 {V \over A}$,
+shear_stress= 1.5 * V(0) / (wid * beam1.d);
+%%
+% converting it into equivalent normal stress by employing Von Mises
+% factor,
+eq_normal = sqrt(3) * shear_stress
+eq_normal/(YS/FoS)
+%%
+% So, it is visible that even in the worst-but-theoretically-impossible
+% situation of maximum shear overlapping with maximum bending moment, it
+% accounts for no more than 2.2% of stress. Hence, it can be ignored.
+%% Design by fully stressed beam
+% Before diving into design, following points are to be noted:
+% 
+% *WIP*
 ##### SOURCE END #####
 --></body></html>
