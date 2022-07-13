@@ -101,7 +101,7 @@ fplot(M,[0 Len])
 xlabel(<span class="string">"distance along beam (m)"</span>)
 ylabel(<span class="string">"bending moment, N"</span>)
 title(<span class="string">"BMD"</span>)
-</pre><center><img vspace="5" hspace="5" src="Problem1_FSB_01.png" alt=""></center> <p>To figure out maximum bending moment, we find M at Len/2.</p><pre class="codeinput">M_max=M(Len/2)
+</pre><img vspace="5" hspace="5" src="Problem1_FSB_01.png" alt=""> <p>To figure out maximum bending moment, we find M at Len/2.</p><pre class="codeinput">M_max=M(Len/2)
 </pre><pre class="codeoutput">
 M_max =
 
@@ -142,7 +142,7 @@ ans =
 
     0.0217
 
-</pre><p>So, it is visible that even in the worst-but-theoretically-impossible situation of maximum shear overlapping with maximum bending moment, it accounts for no more than 2.2% of stress. Hence, it can be ignored.</p><h2 id="16">Design by fully stressed beam</h2><p>Before diving into design, following points are to be noted:</p><p><b>WIP</b></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+</pre><p>So, it is visible that even in the worst-but-theoretically-impossible situation of maximum shear overlapping with maximum bending moment, it accounts for no more than 2.2% of stress. Hence, it can be ignored. Further details can be analyzed in this <a href="https://minerva-007.github.io/Write-ups/Mechanical/Problem1/SideQuest_Problem1.html">side quest</a>.</p><h2 id="16">Design by fully stressed beam</h2><p>Before diving into design, following points are to be noted:</p><p><b>WIP</b></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Problem 1: Fully Stressed Beams
 % Pretty bored on 8 April 2021, I decided to design a problem related to 
@@ -253,6 +253,8 @@ eq_normal/(YS/FoS)
 % So, it is visible that even in the worst-but-theoretically-impossible
 % situation of maximum shear overlapping with maximum bending moment, it
 % accounts for no more than 2.2% of stress. Hence, it can be ignored.
+% Further details can be analyzed in this 
+% <https://minerva-007.github.io/Write-ups/Mechanical/Problem1/SideQuest_Problem1.html side quest>. 
 %% Design by fully stressed beam
 % Before diving into design, following points are to be noted:
 % 
