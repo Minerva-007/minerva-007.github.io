@@ -1,0 +1,237 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Side quest: combined stresses, stress distributions, and stuff</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-07-13"><meta name="DC.source" content="idkwtf.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:segoe print; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:justify; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Times new roman; font-size:3em; color:#d55000; line-height:100%; font-weight:normal; text-align:center;}
+h2 { padding:0px; margin:0px 0px 8px; font-family:Times new roman; font-size:1.4em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Times new roman; font-size:1.3em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Side quest: combined stresses, stress distributions, and stuff</h1><!--introduction--><p>This side quest accompanies <a href="https://minerva-007.github.io/Write-ups/Mechanical/Problem1/Problem1_FSB.html">Problem 1: Fully Stressed Beams</a> and takes a look at how combined stresses appear in a beam.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Variables</a></li><li><a href="#4">Stress equations</a></li><li><a href="#7">Solving process</a></li><li><a href="#8">Contour plots</a></li><li><a href="#9">Surface plots</a></li><li><a href="#10">Observations</a></li></ul></div><h2 id="1">Variables</h2><p>Continuing with variables from above mentioned link, we have:</p><pre class="codeinput">load_dis=50e3;
+Len=20;wid=3;d=0.25;
+R_left=load_dis*Len/2;
+I=wid*d^3/12;
+</pre><p>Defining shear and bending moment distribution</p><pre class="codeinput">V = @(x) -load_dis.* x + R_left;
+M = @(x) -load_dis.* x.^2 *0.5 + R_left.*x;
+</pre><p>Shear distribution factor: this is the shape factor that accompanies the shear stress equation <img src="idkwtf_eq05754600769531532382.png" alt="$\tau = {{ V \times Q} \over {I \times t}}$">. For the case of a rectangular cross-section, the obtained results are <img src="idkwtf_eq14153033971928643571.png" alt="$Q = {{1 \over 2} \times ( {d^2 \over 4} - x^2) \times width}$"></p><pre class="codeinput">Q= @(x) 0.5.* (d.^2/4 -x.^2).* wid;
+</pre><h2 id="4">Stress equations</h2><p>Normal stress is defined by the prismatic assumption-based flexure formula: <img src="idkwtf_eq16719186974617493643.png" alt="$\sigma = {{M \times c} \over I}$"> Here, Normal stress becomes a 2-dimensional formula varying along length and depth of beam</p><pre class="codeinput">Normal= @(x,c) M(x).*c / I;
+</pre><p>Shear stress is defined by elementary shear formula (which holds true for several engineering applications). The equation is <img src="idkwtf_eq05754600769531532382.png" alt="$\tau = {{ V \times Q} \over {I \times t}}$"></p><pre class="codeinput">shear= @(x,c) V(x).*Q(c) / I / wid;
+</pre><p>Von mises equivalent stress is defined using several methods involving principal stress and/or shear stresses. Here, a simpler case is considered where <img src="idkwtf_eq17503548522986742332.png" alt="$\sigma_{eq} = \sqrt{\sigma^2+3\times\tau^2}$"></p><pre class="codeinput">vonEq= @(x,c) sqrt( Normal(x,c).^2 + 3*shear(x,c).^2 );
+</pre><h2 id="7">Solving process</h2><p>This is particularly interesting problem to solve, since we have two vectors of unequal size (say, n and m) and wish to calculate a function for all combinations of the two vectors (generating an n*m matric). The method used here is to create the vectors and replicate these vectors into a matrix using repmat function. The vector with n size is expanded m times, and vice versa;</p><pre class="codeinput">x=repmat([0:0.05:Len], length(d/2:-0.005:-d/2), 1);
+c=repmat([d/2:-0.005:-d/2]', 1, length(0:0.05:Len));
+</pre><h2 id="8">Contour plots</h2><p>The contour plots show the stress distribution in a clean way. Using abs function to account for -ve values of normal and shear stresses. Here are the plots:</p><pre class="codeinput">figure
+contour(abs(Normal(x,c)),20)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title(<span class="string">"Normal stress"</span>)
+
+figure
+contour(abs(shear(x,c)),20)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title(<span class="string">"Shear stress"</span>)
+
+figure
+contour(abs(vonEq(x,c)),20)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title(<span class="string">"Von Mises equivalent"</span>)
+</pre><img vspace="5" hspace="5" src="idkwtf_01.png" alt=""> <img vspace="5" hspace="5" src="idkwtf_02.png" alt=""> <img vspace="5" hspace="5" src="idkwtf_03.png" alt=""> <h2 id="9">Surface plots</h2><pre class="codeinput">figure
+surf(abs(Normal(x,c)),<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>)
+view(0,90)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title(<span class="string">"Normal stress, max:"</span>+max(max(Normal(x,c))));
+
+figure
+surf(abs(shear(x,c)),<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>)
+view(0,90)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title(<span class="string">"Shear stress, max:"</span>+max(max(shear(x,c))))
+
+figure
+surf(vonEq(x,c),<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>)
+view(0,90)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title(<span class="string">"von Mises equivalent, max:"</span>+max(max(vonEq(x,c))))
+</pre> <img vspace="5" hspace="5" src="idkwtf_05.png" alt=""> <img vspace="5" hspace="5" src="idkwtf_06.png" alt=""> <img vspace="5" hspace="5" src="idkwtf_07.png" alt=""> <h2 id="10">Observations</h2><div><ul><li>The normal stress in bending is well along the order of <img src="idkwtf_eq02417345316184240329.png" alt="$10^7$">, whereas the shear stress is within <img src="idkwtf_eq08721779874586450865.png" alt="$10^5$"> range. This shows the affect of shear stress on the beam design.</li><li>The maximum value for von Mises equivalent stress is found to be exactly the same as in case of bending. This is not surprising, for maximum shear occurs at supports while maximum bending occurs at the center of the beam. These calculations visualize the results.</li><li>This activity interests me to work on stress trajectory visualizations, a theme I may tackle in future.</li></ul></div><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Side quest: combined stresses, stress distributions, and stuff
+% This side quest accompanies <https://minerva-007.github.io/Write-ups/Mechanical/Problem1/Problem1_FSB.html Problem 1: Fully 
+% Stressed Beams> and takes a look at how combined stresses appear in a
+% beam. 
+%% Variables
+% Continuing with variables from above mentioned link, we have:
+load_dis=50e3;
+Len=20;wid=3;d=0.25;
+R_left=load_dis*Len/2;
+I=wid*d^3/12;
+%%
+% Defining shear and bending moment distribution
+V = @(x) -load_dis.* x + R_left;
+M = @(x) -load_dis.* x.^2 *0.5 + R_left.*x;
+%% 
+% Shear distribution factor: this is the shape factor that accompanies the
+% shear stress equation $\tau = {{ V \times Q} \over {I \times t}}$.
+% For the case of a rectangular cross-section, the obtained results are
+% $Q = {{1 \over 2} \times ( {d^2 \over 4} - x^2) \times width}$
+Q= @(x) 0.5.* (d.^2/4 -x.^2).* wid;
+
+%% Stress equations
+% Normal stress is defined by the prismatic assumption-based flexure
+% formula: $\sigma = {{M \times c} \over I}$
+% Here, Normal stress becomes a 2-dimensional formula varying along length
+% and depth of beam
+Normal= @(x,c) M(x).*c / I;
+
+%% 
+% Shear stress is defined by elementary shear formula (which holds true for
+% several engineering applications). The equation is 
+% $\tau = {{ V \times Q} \over {I \times t}}$
+shear= @(x,c) V(x).*Q(c) / I / wid;
+%%
+% Von mises equivalent stress is defined using several methods involving 
+% principal stress and/or shear stresses. Here, a simpler case is
+% considered where $\sigma_{eq} = \sqrt{\sigma^2+3\times\tau^2}$
+vonEq= @(x,c) sqrt( Normal(x,c).^2 + 3*shear(x,c).^2 );
+%% Solving process
+% This is particularly interesting problem to solve, since we have two
+% vectors of unequal size (say, n and m) and wish to calculate a function
+% for all combinations of the two vectors (generating an n*m matric). The
+% method used here is to create the vectors and replicate these vectors
+% into a matrix using repmat function. The vector with n size is expanded m
+% times, and vice versa;
+x=repmat([0:0.05:Len], length(d/2:-0.005:-d/2), 1);
+c=repmat([d/2:-0.005:-d/2]', 1, length(0:0.05:Len));
+%% Contour plots
+% The contour plots show the stress distribution in a clean way. Using abs
+% function to account for -ve values of normal and shear stresses.
+% Here are the plots:
+figure
+contour(abs(Normal(x,c)),20)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title("Normal stress")
+
+figure
+contour(abs(shear(x,c)),20)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title("Shear stress")
+
+figure
+contour(abs(vonEq(x,c)),20)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title("Von Mises equivalent")
+
+%% Surface plots
+% 
+figure
+surf(abs(Normal(x,c)),'EdgeColor','none')
+view(0,90)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title("Normal stress, max:"+max(max(Normal(x,c))));
+
+figure
+surf(abs(shear(x,c)),'EdgeColor','none')
+view(0,90)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title("Shear stress, max:"+max(max(shear(x,c))))
+
+figure
+surf(vonEq(x,c),'EdgeColor','none')
+view(0,90)
+colorbar
+xlim([1 401])
+ylim([1 51])
+title("von Mises equivalent, max:"+max(max(vonEq(x,c))))
+%% Observations
+% * The normal stress in bending is well along the order of $10^7$, whereas
+% the 
+% shear stress is within $10^5$ range. This shows the affect of shear
+% stress on the beam design. 
+% * The maximum value for von Mises equivalent stress is found to be
+% exactly the same as in case of bending. This is not surprising, for
+% maximum shear occurs at supports while maximum bending occurs at the
+% center of the beam. These calculations visualize the results.
+% * This activity interests me to work on stress trajectory visualizations,
+% a theme I may tackle in future.
+
+##### SOURCE END #####
+--></body></html>
