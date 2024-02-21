@@ -8,12 +8,16 @@ header:
 title: "Portfolio"
 excerpt: List of freelance, academic, and personal projects I have completed.
 intro:
-   - excerpt: "This will take time, I have more than 50 projects to showcase haha"
-   - btn_class: "btn--primary"
-   - btn_label: "Go to blog"
-   - url: https://minerva-007.github.io/posts
+   - excerpt: "Select a type to visit relevant projects."
+projectHeadings:
+   - title: "Modelling and Simulation"
+     excerpt: "Predicting success of your project using using advanced FEA/CFD utilities."
+     image_path: "/assets/images/simulation.png"
+     url: "/portfolio.html"
+     btn_label: "See our work"
+     btn_class: "btn--primary"
 ---
 
-# Work in progress
-
 {% include feature_row id="intro" type="center" %}
+
+{% include feature_row id="projectHeadings" %}
