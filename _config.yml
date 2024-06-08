@@ -106,7 +106,7 @@ analytics:
 # Site Author
 author:
   name             : "Mueez Ul-Haq (Minerva.)"
-  avatar           : "/assets/images/Me Fr.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/assets/images/Me Fr.jpeg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Mechanical/Thermal Power Engineer with more experience in coding... for some reason"
   location         : "MED UET Lahore/QATPL Bhikki"
   email            :
