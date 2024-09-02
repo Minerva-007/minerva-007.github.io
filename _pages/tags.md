@@ -1,6 +1,6 @@
 ---
 layout: single
-permalink: /tags
+permalink: /tags/
 title: "Tags"
 header:
    overlay_image: /assets/images/DigitalTwin.png
